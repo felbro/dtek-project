@@ -1,0 +1,65 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[inner=2cm,top=3cm,outer=2cm,bottom=3cm]{geometry}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{titling}
+\usepackage[toc,page]{appendix}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{array}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\setlength{\droptitle}{-10em} 
+
+%\def\name{Felix Broberg & Sofia Petter}
+
+\author{
+  Broberg, Felix\\
+  950414-7852
+  \and
+  Duong, Julia\\
+  ------
+}
+
+\pagenumbering{gobble}
+
+\title{Amplitude and Frequency Visualization of Sound}
+\begin{document}
+\maketitle
+%\clearpage
+%\tableofcontents
+%\clearpage
+
+
+\section*{Objective and Requirements}
+\textbf{We intend to do an advanced project.}\\
+Our objective is to visualize real-time sound input from a microphone, connected to the chipkit, through graphs displayed on the I/O-shield display. By using a fast Fourier transform (FFT) algorithm, we will compute frequency-amplitude and amplitude graphs.\\
+\newline
+Project requirements:
+\begin{itemize}
+\item Graphs have to be displayed on the I/O-shield display.
+\item Amplitude graph must be computed.
+\item Frequency-Amplitude graph must be computed.
+\item The user should be able to switch between the two graphs using buttons on the chipkit.
+\item The sound is inputed via the microphone connected to the chipkit.
+\end{itemize}
+Optional features:
+\begin{itemize}
+\item Record the input sound and save it to a file.
+\item Play a soundclip through the chipkit while displaying the graphs.
+\end{itemize}
+\section*{Solution}
+Most of the code will be written in C along with assembly code if needed. We will, most likely, use Kiss FFT to compute and analyze the sound. The project will be developed on the chipKit uno32 board together with the Basic I/O shield and a microphone. The I/O shield display will be used to present the graphs and the microphone, along with the A/D converter, will be used for sound input. The buttons on the I/O shield will enable us to switch between graphs.
+\section*{Verification}
+We will test the accuracy of the FFT algorithm and our computations by comparing them to recognized and (assumed to be) correct implementations, for instance audacity's frequency-amplitude graph. We will also perform tests on the accuracy of the microphone by playing sounds with known frequency-amplitude relation.
+\section*{Contributions}
+The work will be divided in the following way: Julia will focus on the I/O shield development, including the buttons and the graphical aspect, and Felix will work on the FFT algorithm and sound interpretation. We will decide together how the graphs should be displayed and how to best connect our different areas of development.
+\section*{Reflections}
+We will discuss and reflect on our project in the final abstract.
+
+\end{document}
