@@ -10,10 +10,12 @@
 
    For copyright and licensing, see file COPYING */
 
+
 #include <stdio.h>
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
+
 
 int ADCValue;
 int ADCValue2;
@@ -31,6 +33,7 @@ void convertit(int value) {
                 str[i] = (value / other) % 10 + 48;
                 other *= 10;
         }
+
 }
 
 int absolute(int val) {
