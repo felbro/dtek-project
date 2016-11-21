@@ -17,6 +17,7 @@
 
 int ADCValue;
 int ADCValue2;
+int ADCAvg;
 char str[9];
 
 unsigned char count = 0;
@@ -32,14 +33,29 @@ void convertit(int value) {
         }
 }
 
+int absolute(int val) {
+        if (val < 0) return (-1)*val;
+        else return val;
+}
+
 void updateValues() {
         ADCValue = ADC1BUF0; // yes then get ADC value
         ADCValue2 = ADC1BUF1;
-        convertit(ADCValue);
+
+        ADCAvg = (ADCValue + ADCValue2) / 2;
+
+        convertit(ADCAvg);
         display_string( 3, str);
-        convertit(ADCValue2);
-        display_string( 2, str);
         display_update();
+        PORTE &= ~0xff;
+        if(absolute(ADCAvg - 512) > 300) PORTE |= 0x00ff;
+        else if(absolute(ADCAvg - 512) > 265) PORTE |= 0x007f;
+        else if(absolute(ADCAvg - 512) > 230) PORTE |= 0x003f;
+        else if(absolute(ADCAvg - 512) > 190) PORTE |= 0x001f;
+        else if(absolute(ADCAvg - 512) > 160) PORTE |= 0x000f;
+        else if(absolute(ADCAvg - 512) > 130) PORTE |= 0x0007;
+        else if(absolute(ADCAvg - 512) > 100) PORTE |= 0x0003;
+        else if(absolute(ADCAvg - 512) > 70) PORTE |= 0x0001;
 }
 
 
@@ -53,6 +69,9 @@ void user_isr( void )
 /* Lab-specific initialization goes here */
 void labinit( void )
 {
+
+        TRISE &= ~0xff;
+
         TRISB |= 0x0004;
         AD1PCFG = 0xFFFB; // PORTB = Digital; RB2 = analog
 
@@ -60,17 +79,18 @@ void labinit( void )
         //AD1CON1 = 0x0000; // SAMP bit = 0 ends sampling
         // and starts converting
         //AD1CON1 = 0x0004; // automatically starts after conv done.
-        AD1CON1 = 0x00E0;
+        AD1CON1 = 0x00E0; // FOR INTERRUPTS
 
         AD1CHS = 0x00020000; // Connect RB2/AN2 as CH0 input
         // in this example RB2/AN2 is the input
         AD1CSSL = 0;
         AD1CON3 = 0x0002; // Manual Sample, TAD = internal 6 TPB
 
-        //AD1CON2 = 0; //normal
+        //AD1CON2 = 0; //normal -- NO INTERRUPTS
 
-/**  FOR THIS PART ONLY **/
+/**  FOR INTERRUPTS ONLY **/
         AD1CON2 = 0x0004;
+
         IPC(6) |= 0x1c00; // Set Priority to 5
         //IPCS(6) |= 0x0003; // Set Sub Priority to 3
 //
@@ -89,29 +109,17 @@ void labinit( void )
 /* This function is called repetitively from the main program */
 void labwork( void )
 {
-
-        /*if(((IFS(1) >> 1) & 1) == 1) {
-                IFS(1) &= ~0x0002;
-                ADCValue = ADC1BUF0;
-                convertit();
-                display_string( 3, str);
-                display_update();
-           }*/
-
+        //delay(100);
         ADCValue = 0;
         ADCValue2 = 0;
-        //AD1CON1SET = 0x0002; // start sampling ...
-        //delay(100);     // for 100 ms
 
         IFS(1) &= ~0x0002;
 
         AD1CON1SET = 0x0004;
-
-
         while(((IFS(1) >> 1) & 1) != 1) ;
 
-        AD1CON1CLR = 0x0004;     // start Converting
-        //while (!(AD1CON1 & 0x0001)) ;  // conversion done?
+        AD1CON1CLR = 0x0004;
+        // conversion done?
         updateValues();
 
 }
