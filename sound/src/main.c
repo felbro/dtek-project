@@ -3,10 +3,13 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 
-int ADCValue;
-int ADCValue2;
-int ADCAvg;
+//int ADCValue;
+//int ADCValue2;
+//int ADCAvg;
 char str[9];
+
+int re[64];
+int im[64];
 
 
 void convertit(int value) {
@@ -23,12 +26,13 @@ int absolute(int val) {
         if (val < 0) return (-1)*val;
         else return val;
 }
+/*
+   void updateValues() {
+        ADCValue = ADC1BUF0;
+        //ADCValue2 = ADC1BUF1;
 
-void updateValues() {
-        ADCValue = ADC1BUF0; // yes then get ADC value
-        ADCValue2 = ADC1BUF1;
-
-        ADCAvg = (ADCValue + ADCValue2) / 2;
+        //ADCAvg = (ADCValue + ADCValue2) / 2;
+        ADCAvg = ADCValue;
 
         convertit(ADCAvg);
         display_string( 3, str);
@@ -42,24 +46,60 @@ void updateValues() {
         else if(absolute(ADCAvg - 512) > 130) PORTE |= 0x0007;
         else if(absolute(ADCAvg - 512) > 100) PORTE |= 0x0003;
         else if(absolute(ADCAvg - 512) > 70) PORTE |= 0x0001;
-}
+   }
+ */
 
+unsigned short isqrt(unsigned long a) {
+        unsigned long rem = 0;
+        int root = 0;
+        int i;
+
+        for (i = 0; i < 16; i++) {
+                root <<= 1;
+                rem <<= 2;
+                rem += a >> 30;
+                a <<= 2;
+
+                if (root < rem) {
+                        root++;
+                        rem -= root;
+                        root++;
+                }
+        }
+
+        return (unsigned short) (root >> 1);
+}
 
 int main(void) {
         setUp();
         while( 1 )
         {
-                ADCValue = 0;
-                ADCValue2 = 0;
 
-                IFS(1) &= ~0x0002;
+                int i;
+                for (i = 0; i < 64; i++) {
+                        //                ADCValue = 0;
+                        //                ADCValue2 = 0;
 
-                AD1CON1SET = 0x0004;
-                while(((IFS(1) >> 1) & 1) != 1) ;
-                AD1CON1CLR = 0x0004;
+                        IFS(1) &= ~0x0002;
+
+                        AD1CON1SET = 0x0004;
+                        while(((IFS(1) >> 1) & 1) != 1) ;
+                        AD1CON1CLR = 0x0004;
+
+                        re[i] = ADC1BUF0 - 512;
+                        im[i] = 0;
+
+                }
+
+//HÄR SKA VI KANSKE PAUSA SAMPLING
+                fix_fft(re,im,6);
+
+                for (i = 0; i < 32; i++) {
+                        re[i] = isqrt(re[i]*re[i]+im[i]*im[i]);
+                }
+//                updateValues(); //For the display
 
 
-                updateValues();
         }
         return 0;
 
