@@ -88,11 +88,13 @@ void labinit( void )
         // in this example RB2/AN2 is the input
         AD1CSSL = 0;
         AD1CON3 = 0x0002; // Manual Sample, TAD = internal 6 TPB
+        AD1CON3 = 0x014c; // TAD = 154 internal PTB, Samples for 1 TAD.
 
         //AD1CON2 = 0; //normal -- NO INTERRUPTS
 
 /**  FOR INTERRUPTS ONLY **/
-        AD1CON2 = 0x0004;
+        //AD1CON2 = 0x0004; // 2 samp and conv before conversion
+        AD1CON2 = 0x0000; // 1 samp nefore conversion.
 
         IPC(6) |= 0x1c00; // Set Priority to 5
         //IPCS(6) |= 0x0003; // Set Sub Priority to 3
@@ -120,9 +122,9 @@ void labwork( void )
 
         AD1CON1SET = 0x0004;
         while(((IFS(1) >> 1) & 1) != 1) ;
-
         AD1CON1CLR = 0x0004;
-        // conversion done?
+
+
         updateValues();
 
 }
