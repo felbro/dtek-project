@@ -2,12 +2,12 @@
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
-
-//int ADCValue;
-//int ADCValue2;
-//int ADCAvg;
+//#include "visuals.c"
 
 #define ITERATIONS 256
+#define SW4_ON (PORTD >> 11 & 1)
+#define RESET_LED (PORTE &= ~0xff)
+#define CONVERSION_DONE ((IFS(1) >> 1) & 1)
 
 char str[9];
 int averages[8];
@@ -22,11 +22,11 @@ void user_isr(){
 
 
 void operationAmpl(){
-        PORTE &= ~0xff;
+        RESET_LED;
         IFS(1) &= ~0x0002;
 
         AD1CON1SET = 0x0004;
-        while(((IFS(1) >> 1) & 1) != 1) ;
+        while(!CONVERSION_DONE) ;
         AD1CON1CLR = 0x0004;
 
 
@@ -45,7 +45,7 @@ void operationFreq() {
                 IFS(1) &= ~0x0002;
 
                 AD1CON1SET = 0x0004;
-                while(((IFS(1) >> 1) & 1) != 1) ;
+                while(!CONVERSION_DONE) ;
                 AD1CON1CLR = 0x0004;
 
                 re[i] = ADC1BUF0 - 512;
@@ -64,17 +64,18 @@ void operationFreq() {
 
 
         //DISPLAY
-        calcAverages(16,averages,re);
-        //calcAverages(3,averages,re);
+        //calcAverages(16,averages,re); // for entire 5khz
+        /*calcAverages(6,averages,re); // for 0-1.3khz
 
-        PORTE &= ~0xff;
-        char yeh = findmaxAvg(averages);
-        //if(re[yeh] > 9)
-        PORTE |= 1 << (7-yeh);
+           RESET_LED;
+           char yeh = findmaxAvg(averages);
+           //if(re[yeh] > 9)
+           PORTE |= 1 << (7-yeh);
 
-        convertit(re[yeh],str);
-        display_string(1,str);
-        display_update();
+           convertit(re[yeh],str);
+           display_string(1,str);
+           display_update();*/
+        graph(re);
 
 }
 
@@ -83,7 +84,7 @@ int main(void) {
         setUp();
         while( 1 )
         {
-                if ((PORTD >> 11 & 1) == 1) {
+                if (SW4_ON) {
                         operationFreq();
                 }
                 else {
@@ -92,6 +93,9 @@ int main(void) {
 
                 //delay(100);
         }
+
+
+
         return 0;
 
 }
