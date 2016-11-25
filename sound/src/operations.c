@@ -32,11 +32,6 @@ unsigned int isqrt(unsigned int a) {
 }
 
 
-int absolute(int val) {
-        if (val < 0) return (-1)*val;
-        else return val;
-}
-
 
 void convertit(int value, char *s) {
         if(value < 0) value *= -1;
