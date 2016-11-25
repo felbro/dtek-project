@@ -55,7 +55,8 @@ void setUp(){
         AD1CHS = 0x00020000;         // Connect RB2/AN2 as CH0 input
         // in this example RB2/AN2 is the input
         AD1CSSL = 0;
-        AD1CON3 = 0x014c;         // TAD = 154 internal PTB, Samples for 1 TAD.
+        //AD1CON3 = 0x014c;         // TAD = 154 internal TPB, Samples for 1 TAD. AKA sample 20kHz
+        AD1CON3 = 0x047c;
 
         //AD1CON2 = 0; //normal -- NO INTERRUPTS
 
@@ -72,6 +73,11 @@ void setUp(){
         /** -------------------- **/
 
         AD1CON1SET = 0x8000;         // turn on the ADC
+
+//FOR SW4
+        //IEC(0) |= 0x80000;
+        //IPC(4) |= 0x1f000000;
+
         enable_interrupt();
         return;
 }

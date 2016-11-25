@@ -6,39 +6,16 @@
 //int ADCValue;
 //int ADCValue2;
 //int ADCAvg;
+
+#define ITERATIONS 256
+
 char str[9];
 int averages[8];
 
+int re[ITERATIONS];
+int im[ITERATIONS];
 
-int re[64];
-int im[64];
-
-
-void convertit(int value) {
-        if(value < 0) value *= -1;
-        int i;
-        int other = 1;
-        for (i = 7; i >= 0; i--) {
-                str[i] = (value / other) % 10 + 48;
-                other *= 10;
-        }
-}
-
-int absolute(int val) {
-        if (val < 0) return (-1)*val;
-        else return val;
-}
-
-
-char findmaxAvg(){
-        char temp = 0;
-        int maxval = averages[0];
-        char curr;
-        for (curr = 1; curr < 8; curr++) {
-                if (averages[curr] > maxval) temp = curr;
-        }
-        return temp;
-}
+char nm[2] = "a";
 
 void updateValues() {
 
@@ -72,57 +49,57 @@ void updateValues() {
            display_string(3,str);
            display_update();*/
 
-        averages[0] = (re[1] + re[2] + re[3]) / 3;
-        int i;
-        for(i = 1; i < 8; i++) {
-                averages[i] = (re[i*4] + re[i*4 + 1] +re[i*4 + 2] +re[i*4 + 3]) / 4;
-        }
-        PORTE &= ~0xff;
-        PORTE |= 1 << findmaxAvg();
+        calcAverages(16,averages,re);
+        //calcAverages(3,averages,re);
 
+
+
+        PORTE &= ~0xff;
+        char yeh = findmaxAvg(averages);
+        //if(re[yeh] > 9)
+        PORTE |= 1 << (7-yeh);
+
+        convertit(re[yeh],str);
+        display_string(1,str);
+        display_update();
 }
 
 
 void user_isr(){
-        //TESTA (GENOM ATT SKRIVA UT PÅ SKÄRMEN) OCH SE IFALL DENNA KALLAS AV VECTORS.S VID INTERRUPTS
-}
-
-unsigned int isqrt(unsigned int a) {
-        unsigned int rem = 0;
-        int root = 0;
-        int i;
-
-        for (i = 0; i < 16; i++) {
-                root <<= 1;
-                rem <<= 2;
-                rem += a >> 30;
-                a <<= 2;
-
-                if (root < rem) {
-                        root++;
-                        rem -= root;
-                        root++;
-                }
-        }
-
-        return (unsigned int) (root >> 1);
+        /*if((IFS(0) >> 19 & 1) == 1) {
+                IFS(0) &= ~0x80000;
+                display_string(3,nm);
+                display_update();
+                nm[0]++;
+           }*/
 }
 
 /*
    TODO
-   ÄNDRA FRÅN AUTOMATICALLY START SAMPLING AFTER CONVERSION TILL MANUELLT. ELLER KANSKE ÄNNU BÄTTRE:
+   onädigt: ÄNDRA FRÅN AUTOMATICALLY START SAMPLING AFTER CONVERSION TILL MANUELLT. ELLER KANSKE ÄNNU BÄTTRE:
    PAUSA EFTER 64 ST SAMPLES HAR SAMPLATS OCH KONVERTERATS.
 
+   ändra till signed integer.
+
+   GÖR 2 STATES. IFALL SWITCH IS ON, VISA FFT THINGY. ANNARS amplitude.
+
  */
+void checkSwitch() {
+        if ((PORTD >> 11 & 1) == 1) {
+                display_string(3,"On");
+        }
+        else display_string(3,"Off");
+        display_update();
+}
 
 
 int main(void) {
         setUp();
         while( 1 )
         {
-
+                checkSwitch();
                 unsigned int i;
-                for (i = 0; i < 64; i++) {
+                for (i = 0; i < ITERATIONS; i++) {
                         //                ADCValue = 0;
                         //                ADCValue2 = 0;
 
@@ -133,16 +110,15 @@ int main(void) {
                         AD1CON1CLR = 0x0004;
 
                         re[i] = ADC1BUF0 - 512;
-                        //re[i] = ADCAvg - 512;
                         im[i] = 0;
 
                 }
 
                 //HÄR SKA VI KANSKE PAUSA SAMPLING
 
-                fix_fft(re,im,6);
+                fix_fft(re,im,8);
 
-                for (i = 0; i < 32; i++) {
+                for (i = 0; i < ITERATIONS/2; i++) {
                         re[i] = isqrt(re[i]*re[i]+im[i]*im[i]);
                 }
                 updateValues();         //For the display
