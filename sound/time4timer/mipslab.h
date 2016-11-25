@@ -38,7 +38,10 @@ void display_debug( volatile int * const addr );
 /* Declare bitmap array containing font */
 extern const uint8_t const font[128*8];
 /* Declare bitmap array containing icon */
-extern const uint8_t const icon[128];
+extern const uint8_t const icon1[128];
+extern const uint8_t const icon2[128];
+extern const uint8_t const icon3[128];
+extern const uint8_t const icon4[128];
 /* Declare text buffer for display output */
 extern char textbuffer[4][16];
 
