@@ -51,7 +51,26 @@ void graphFreq(int *arr) {
         display_image(96,square);
         //memcpy(square,black,128);
 }
+void drawDots(uint8_t col, uint8_t height) {
+
+
+
+}
 
 void graphAmp(int val){
+  //vi får in värde mellan 0 - 1023
+  int r = val / 64;
+  int amp;
+  uint8_t i;
+  for (i = 1; < 128; i++){
+    amp = r*r - ((i-64)/4)((i-64)/4);
+    if(amp > 0)
+        drawDots(i, isqrt(amp));
+    else
+        drawDots(i, 0);
+    if(i % 32 == 0)
+      display_image(i-32, square);
+  }
+  display_image(96, square);
 
 }
