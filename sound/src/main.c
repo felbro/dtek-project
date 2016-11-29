@@ -7,7 +7,6 @@
 #define SW4_ON (PORTD >> 11 & 1)
 #define BTN4_ON (PORTD >> 7 & 0x1)
 #define BTN3_ON (PORTD >> 6 & 0x1)
-#define RESET_LED (PORTE &= ~0xff)
 #define CONVERSION_DONE ((IFS(1) >> 1) & 1)
 
 char str[9];
@@ -21,17 +20,20 @@ void user_isr(){
 
 
 void operationAmpl(){
-        RESET_LED;
-        IFS(1) &= ~0x0002;
+        //RESET_LED;
+        short maxVal = 0;
+        uint8_t i;
+        for (i = 0; i < ITERATIONS-1; i++) {
+                IFS(1) &= ~0x0002;
 
-        AD1CON1SET = 0x0004;
-        while(!CONVERSION_DONE) ;
-        AD1CON1CLR = 0x0004;
+                AD1CON1SET = 0x0004;
+                while(!CONVERSION_DONE) ;
+                AD1CON1CLR = 0x0004;
 
-////_------------------------------///
-        convertit(ADC1BUF0 - 512,str);
-        display_string(1,str);
-        display_update();
+                if(ADC1BUF0 > maxVal) maxVal = ADC1BUF0;
+        }
+
+        graphAmp(maxVal-512);
 }
 
 
@@ -56,9 +58,6 @@ void operationFreq() {
                 re[i] = isqrt(re[i]*re[i]+im[i]*im[i]);
         }
         graphFreq(re);
-
-
-
 }
 
 
