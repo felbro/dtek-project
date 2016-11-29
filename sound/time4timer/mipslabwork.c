@@ -44,26 +44,5 @@ void labinit( void )
 /* This function is called repetitively from the main program */
 void labwork( void )
 {
-        if((IFS(0) >> 8 & 1) == 1) {
-                IFS(0) &= ~0x100;
-                if(++timeoutcount == 10) {
-                        timeoutcount = 0;
-                        time2string( textstring, mytime );
-                        display_string( 3, textstring );
-                        display_update();
-                        tick( &mytime );
-                        display_image(96, icon);
-
-                        *porte = (*porte & ~0xff) | count;
-                        count++;
-                }
-        }
-
-        int btn = getbtns();
-        if(btn) {
-                int sw = getsw();
-                if(btn >> 2 == 1) mytime = (mytime & 0xfff) | (sw << 12);
-                if((btn & 2) == 2) mytime = (mytime & 0xf0ff) | (sw << 8);
-                if(btn & 1 == 1) mytime = (mytime & 0xff0f) | (sw << 4);
-        }
+        
 }
