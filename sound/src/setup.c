@@ -55,8 +55,9 @@ void setUp(){
         AD1CHS = 0x00020000;         // Connect RB2/AN2 as CH0 input
         // in this example RB2/AN2 is the input
         AD1CSSL = 0;
-        AD1CON3 = 0x019a;         // TAD = 154 internal TPB, Samples for 1 TAD. AKA sample 20kHz - show 10khz
-        //AD1CON3 = 0x04fa;           // Sample 10khz - show 5k
+        //AD1CON3 = 0x019a;         // TAD = 154 internal TPB, Samples for 1 TAD. AKA sample 20kHz - show 10khz
+        AD1CON3 = 0x04fa;           // Sample 10khz - show 5k
+
 
         //AD1CON2 = 0; //normal -- NO INTERRUPTS
 
