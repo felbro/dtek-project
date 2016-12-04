@@ -1,7 +1,13 @@
 /* setup.c
-   Written 2016 by Felix Brober and Julia Duong
-
-   For copyright and licensing, see file COPYING
+ *   Written 2016 by Felix Brober and Julia Duong
+ *
+ *   For copyright and licensing, see file COPYING
+ *
+ * Sets up the chipkit with correct values for ports,
+ * IO-shield and analog input. The analog input is set
+ * to 10 kHz sampling frequency, automatic sampling and
+ * enabled interrupt and will sample from AN2 (A0 on
+ * the Basic Shield).
  */
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
@@ -46,31 +52,28 @@ void setUp(){
 
 
 // OWN SETUP
-        TRISE &= ~0xff;
-
-        TRISB |= 0x0004;
         AD1PCFG = 0xFFFB;         // PORTB = Digital; RB2 = analog
 
-        AD1CON1 = 0x00E0;         // FOR INTERRUPTS
+        AD1CON1 = 0x00E0;         // Enables automatic sampling with interrupts.
 
         AD1CHS = 0x00020000;         // Connect RB2/AN2 as CH0 input
         AD1CSSL = 0;
-        //AD1CON3 = 0x019a;         // TAD = 154 internal TPB, Samples for 1 TAD. AKA sample 20kHz - show 10khz
-        AD1CON3 = 0x04fa;           // Sample 10khz - show 5k
+        //AD1CON3 = 0x019a;         // Sample 20kHz - show 10khz
+        AD1CON3 = 0x04fa;           // Sample 10khz - show 5kHz
 
 
         /**  FOR INTERRUPTS ONLY **/
-        //AD1CON2 = 0x0004; // 2 samp and conv before conversion
-        AD1CON2 = 0x0000;         // 1 samp nefore conversion.
+        AD1CON2 = 0x0000;         // 1 sample nefore conversion.
 
-        IPC(6) |= 0x1c00;         // Set Priority to 5
+        IPC(6) |= 0x1c00;         // Set Priority to 5. Could be set to 7 instead
+                                  // With sub-prio set to whatever (e.g. 3 if necessary)
         IFS(1) &= ~0x0002;         // Ensure the interrupt flag is clear
-        IEC(1) |= 0x0002;
+        IEC(1) |= 0x0002;           // Enable interrupt for the conversion
 
         /** -------------------- **/
 
         AD1CON1SET = 0x8000;         // turn on the ADC
 
-        enable_interrupt();
+        enable_interrupt();          // Enables interrupts on the device.
         return;
 }
