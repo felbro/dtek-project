@@ -88,8 +88,10 @@ The work was divided in the following way: Julia focused on the I/O-shield devel
 
 \section*{Reflections}
 
-We will discuss and reflect on our project in the final abstract.
+Several challenges were faced during the development of both focus parts. Sampling the sound with automatic sampling at a set frequency requires both calculations of the sampling time in regards to the system clock rate as well as the handling of interrupts when sampling conversion is complete. Getting the hang of this took some time, but once completely understood, performing calculations on the result and changing sampling frequencies was relatively straightforward.
 
-%Getting the audio to properly sample at a specific rate was a challenge as the AC-converter uses 
+We intended to use another FFT algorithm (KissFFT), but getting it to work on the chipkit proved difficult and the performance advantage over our chosen FFT seemed minimal. As the performance of our FFT has proven to be sufficient and the simplicity of the calculations enabled us to focus on other parts of the development, we argue that this was an adventageous choice.
+
+Showing our results on the I/O-shield display was somewhat of a challange as it required pixel-perfect representations. However, once we understood how the pixels were partitioned on the display, we could create functions that updated the display based on columns and height. As our project is heavily dependant on the array-stored results from the audio sampling, this solution enabled us to connect our two development areas with ease.
 
 \end{document}
