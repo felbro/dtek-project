@@ -88,7 +88,7 @@ void drawDots(uint8_t col, char height) {
  *
  * @param *arr  Pointer to an array with the stored values.
  * @param freq  1 if amplitude-frequency relation. 0 if amplitude-time relation.
- * @para size   Array size.
+ * @param size  Array size.
  **/
 void graphFreqorWave(const int *arr, const char freq, const uint8_t size) {
         uint8_t i;

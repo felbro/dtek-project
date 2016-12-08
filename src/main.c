@@ -15,7 +15,6 @@
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
-#include <math.h>
 
 #define ITERATIONS 256 //Number of samples
 #define SW4_ON (PORTD >> 11 & 1)

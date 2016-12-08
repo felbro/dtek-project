@@ -1,0 +1,94 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[inner=2cm,top=3cm,outer=2cm,bottom=3cm]{geometry}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{titling}
+\usepackage[toc,page]{appendix}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={black!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\setlength{\droptitle}{-10em} 
+
+
+
+\author{
+  Broberg, Felix\\
+  950414-7852
+  \and
+  Duong, Julia\\
+  890922-1189
+}
+
+\pagenumbering{gobble}
+
+\title{Amplitude and Frequency Visualization of Sound}
+\begin{document}
+\maketitle
+%\clearpage
+%\tableofcontents
+%\clearpage
+
+
+\section*{Objective and Requirements}
+\textbf{This is intended as an advanced project.}\\
+Our objective was to visualize real-time sound input from a microphone, connected to the chipkit, through graphs and visualizations displayed on the I/O-shield display. We sampled the sound through our microphone and computed and displayed an amplitude-time graph, a visual representation (pulsating oval) of the current amplitude of the audio and, with the help of a fast Fourier transform (FFT) algorithm, an amplitude-frequency graph.\\
+\newline
+Proposed project requirements:
+
+\begin{itemize}
+\item Graphs have to be displayed on the I/O-shield display.
+\item Amplitude graph must be computed.
+\item Frequency-Amplitude graph must be computed.
+\item The user should be able to switch between the two graphs using switches on the chipkit.
+\item The sound is inputed via the microphone connected to the chipkit.
+\end{itemize}
+Optional features:
+\begin{itemize}
+\item Record the input sound and save it to a file.
+\item Play a soundclip through the chipkit while displaying the graphs.
+\end{itemize}
+Of the proposed project requirements, we implemented all of the main requirements as well as a visual representation (pulsating oval) of the current amplitude of the audio. However, none of the optional features were implemented due to a lack of necessary equipment. Furthermore, we added the feature that the user can switch between sampling frequencies using buttons 3 and 4. 
+
+
+%\clearpage
+\section*{Solution}
+The project source code was written in C with implementations of an integer square-root function\footnote{\url{http://www.codecodex.com/wiki/Calculate_an_integer_square_root} which implements figure 2: \url{http://www.embedded.com/electronics-blogs/programmer-s-toolbox/4219659/Integer-Square-Roots} by Jack W. Crenshaw (Integer Square Roots)} 
+and an FFT\footnote{Written by:  Tom Roberts  11/8/89, \\Made portable:  Malcolm Slaney 12/15/94 malcolm@interval.com, \\Enhanced:  Dimitrios P. Bouras  14 Jun 2006 dbouras@ieee.org, \\Ported to PIC18F:  Simon Inns 20110104.\\ See fft.c for further information} 
+taken from external sources. The project was developed on the chipKit uno32 board together with the Basic I/O shield and a preconfigured microphone and amplifier. The I/O shield display is used to present the graphs and sound amplitude representation and the microphone, along with the A/D converter, is used for sound input. 
+
+The switches on the I/O shield enables us to switch between graphs. With no switches enabled, the chipKit computes and displays the amplitude-time relation, with switch 4 enabled, the chipKit computes and displays the amplitude-frequency relation and with switch 3 enabled (overriding other switches) the visual representation of the current amplitude will be displayed.
+
+The buttons enables the user to swith between sampling frequencies. A sampling frequency of 10 kHz is pre-set enabling an amplitude-frequency graph with domain 5 kHz to be calculated and displayed\footnote{See ``Nyquist frequency'' for further information.}. Pressing button 4 on the Basic I/O-shield will set the sampling frequency to 20 kHz, enabling a frequency domain of 10 kHz, and pressing button 3 will set the sampling frequency to 10 kHz once again.
+
+
+
+\section*{Verification}
+The accuracy and precision of the FFT and our computations were tested by playing sounds to the microphone and comparing the displayed graphs with correct values. By playing single-frequency tones ranging from 100 Hz to half our selected sampling rate, we could investigate how accurately and precisely the sound was sampled and computed. Although the microphone's sampling range was 100 Hz - 10 kHz\footnote{\url{https://www.sparkfun.com/products/12758}}, sampling at 20 kHz still yielded results with high accuracy but slightly low precision. This could be seen by the graph having a correct peak frequency while displaying some amplitude readings for the adjacent frequencies. With a sampling rate of 10 kHz, the graph showed no tendency of spread around the peak frequency and instead showed a single amplitude column at the expected position, indicating both high accuracy and precision.
+
+
+\section*{Contributions}
+The work will be divided in the following way: Julia will focus on the I/O shield development, including the buttons and the graphical aspect, and Felix will work on the FFT algorithm and sound interpretation. We will decide together how the graphs should be displayed and how to best connect our different areas of development.
+
+
+
+
+\section*{Reflections}
+We will discuss and reflect on our project in the final abstract.
+
+\end{document}
