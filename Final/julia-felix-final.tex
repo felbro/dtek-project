@@ -74,7 +74,7 @@ taken from external sources. The project was developed on the chipKit uno32 boar
 
 The switches on the I/O shield enables us to switch between graphs. With no switches enabled, the chipKit computes and displays the amplitude-time relation, with switch 4 enabled, the chipKit computes and displays the amplitude-frequency relation and with switch 3 enabled (overriding other switches) the visual representation of the current amplitude will be displayed.
 
-The buttons enables the user to swith between sampling frequencies. A sampling frequency of 10 kHz is pre-set enabling an amplitude-frequency graph with domain 5 kHz to be calculated and displayed\footnote{See ``Nyquist frequency'' for further information.}. Pressing button 4 on the Basic I/O-shield will set the sampling frequency to 20 kHz, enabling a frequency domain of 10 kHz, and pressing button 3 will set the sampling frequency to 10 kHz once again.
+The buttons enables the user to switch between sampling frequencies. A sampling frequency of 10 kHz is pre-set enabling an amplitude-frequency graph with domain 5 kHz to be calculated and displayed\footnote{See ``Nyquist frequency'' for further information.}. Pressing button 4 on the Basic I/O-shield will set the sampling frequency to 20 kHz, enabling a frequency domain of 10 kHz, and pressing button 3 will set the sampling frequency to 10 kHz once again.
 
 
 
@@ -90,9 +90,9 @@ The work was divided in the following way: Julia focused on the I/O-shield devel
 
 Several challenges were faced during the development of both focus parts. Sampling the sound with automatic sampling at a set frequency requires both calculations of the sampling time in regards to the system clock rate as well as the handling of interrupts when sampling conversion is complete. Getting the hang of this took some time, but once completely understood, performing calculations on the result and changing sampling frequencies was relatively straightforward.
 
-We intended to use another FFT algorithm (KissFFT), but getting it to work on the chipkit proved difficult and the performance advantage over our chosen FFT seemed minimal. As the performance of our FFT has proven to be sufficient and the simplicity of the calculations enabled us to focus on other parts of the development, we argue that this was an adventageous choice.
+We intended to use another FFT algorithm (KissFFT), but getting it to work on the chipkit proved difficult and the performance advantage over our chosen FFT seemed minimal. As the performance of our FFT has proven to be sufficient and the simplicity of the calculations enabled us to focus on other parts of the development, we argue that this was an advantageous choice.
 
-Showing our results on the I/O-shield display was somewhat of a challange as it required pixel-perfect representations. However, once we understood how the pixels were partitioned on the display, we could create functions that updated the display based on columns and height. As our project is heavily dependant on the array-stored results from the audio sampling, this solution enabled us to connect our two development areas with ease.
+Showing our results on the I/O-shield display was somewhat of a challenge as it required pixel-perfect representations. However, once we understood how the pixels were partitioned on the display, we could create functions that updated the display based on columns and height. As our project is heavily dependant on the array-stored results from the audio sampling, this solution enabled us to connect our two development areas with ease.
 
 Overall, our project has taught us a lot about hardware interaction and analog-digital data handling. Some aspects that seemed easy to implement proved themselves to be rather difficult, while other aspects that looked hard were easy. Once certain steps had been taken in the development, for instance getting the sampling to work, moving on and creating new things came natural, for instance computing the amplitude-time relation.
 
