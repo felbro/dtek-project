@@ -69,7 +69,7 @@ Of the proposed project requirements, we implemented all of the main requirement
 %\clearpage
 \section*{Solution}
 The project source code was written in C with implementations of an integer square-root function\footnote{\url{http://www.codecodex.com/wiki/Calculate_an_integer_square_root} which implements figure 2: \url{http://www.embedded.com/electronics-blogs/programmer-s-toolbox/4219659/Integer-Square-Roots} by Jack W. Crenshaw (Integer Square Roots)} 
-and an FFT\footnote{Written by:  Tom Roberts  11/8/89, \\Made portable:  Malcolm Slaney 12/15/94 malcolm@interval.com, \\Enhanced:  Dimitrios P. Bouras  14 Jun 2006 dbouras@ieee.org, \\Ported to PIC18F:  Simon Inns 20110104.\\ See project source-file ``fft.c'' for further information.} 
+and an FFT\footnote{Written by:  Tom Roberts  11/8/89, Made portable:  Malcolm Slaney 12/15/94 malcolm@interval.com, \\Enhanced:  Dimitrios P. Bouras  14 Jun 2006 dbouras@ieee.org, Ported to PIC18F:  Simon Inns 20110104.\\ See project source-file ``fft.c'' for further information.} 
 taken from external sources. The project was developed on the chipKit uno32 board together with the Basic I/O shield and a preconfigured microphone and amplifier. The I/O shield display is used to present the graphs and sound amplitude representation and the microphone, along with the A/D converter, is used for sound input. 
 
 The switches on the I/O shield enables us to switch between graphs. With no switches enabled, the chipKit computes and displays the amplitude-time relation, with switch 4 enabled, the chipKit computes and displays the amplitude-frequency relation and with switch 3 enabled (overriding other switches) the visual representation of the current amplitude will be displayed.
@@ -93,5 +93,7 @@ Several challenges were faced during the development of both focus parts. Sampli
 We intended to use another FFT algorithm (KissFFT), but getting it to work on the chipkit proved difficult and the performance advantage over our chosen FFT seemed minimal. As the performance of our FFT has proven to be sufficient and the simplicity of the calculations enabled us to focus on other parts of the development, we argue that this was an adventageous choice.
 
 Showing our results on the I/O-shield display was somewhat of a challange as it required pixel-perfect representations. However, once we understood how the pixels were partitioned on the display, we could create functions that updated the display based on columns and height. As our project is heavily dependant on the array-stored results from the audio sampling, this solution enabled us to connect our two development areas with ease.
+
+Overall, our project has taught us a lot about hardware interaction and analog-digital data handling. Some aspects that seemed easy to implement proved themselves to be rather difficult, while other aspects that looked hard were easy. Once certain steps had been taken in the development, for instance getting the sampling to work, moving on and creating new things came natural, for instance computing the amplitude-time relation.
 
 \end{document}
