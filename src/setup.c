@@ -1,5 +1,14 @@
 /* setup.c
  *   Written 2016 by Felix Brober and Julia Duong
+ *   All settings before //OWN SETUP mark taken from
+ *   mipslabmain.c with comment:
+          mipslabmain.c
+
+          This file written 2015 by Axel Isaksson,
+          modified 2015 by F Lundevall
+
+          Latest update 2015-08-28 by F Lundevall
+
  *
  *   For copyright and licensing, see file COPYING
  *
